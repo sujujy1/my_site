@@ -121,7 +121,10 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-3">Python基础</h3>
                     <p class="text-gray-600 mb-4">学习Python编程语言的基本语法、数据结构和函数，为数据分析打下基础。</p>
-                    <a href="#" class="text-primary font-medium flex items-center">
+                    <div class="course-details hidden mb-4 space-y-3 text-gray-600">
+                        <p>详细内容将在后续添加</p>
+                    </div>
+                    <a href="#" class="course-toggle text-primary font-medium flex items-center">
                         查看详情 <i class="fa fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -132,7 +135,8 @@
                         <i class="fa fa-line-chart text-secondary text-xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-3">数据分析技术</h3>
-                    <div class="text-gray-600 mb-4 space-y-3">
+                    <p class="text-gray-600 mb-4">学习数据分析的基本方法和工具，包括数据清洗、数据可视化和统计分析。</p>
+                    <div class="course-details hidden mb-4 space-y-3 text-gray-600">
                         <h4 class="font-medium text-secondary">学习大纲：</h4>
                         <div>
                             <p class="font-medium">基础认知（1-2周）</p>
@@ -159,7 +163,7 @@
                             <p class="text-sm">结构化思维（MECE）、业务案例分析（如DAU下降归因）、SQL/统计高频考题、报告呈现能力。</p>
                         </div>
                     </div>
-                    <a href="#" class="text-primary font-medium flex items-center">
+                    <a href="#" class="course-toggle text-primary font-medium flex items-center">
                         查看详情 <i class="fa fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -171,7 +175,10 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-3">数据采集与处理</h3>
                     <p class="text-gray-600 mb-4">学习如何从各种数据源采集数据，并进行有效的数据处理和转换。</p>
-                    <a href="#" class="text-primary font-medium flex items-center">
+                    <div class="course-details hidden mb-4 space-y-3 text-gray-600">
+                        <p>详细内容将在后续添加</p>
+                    </div>
+                    <a href="#" class="course-toggle text-primary font-medium flex items-center">
                         查看详情 <i class="fa fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -183,7 +190,10 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-3">供应链数据分析</h3>
                     <p class="text-gray-600 mb-4">学习如何应用数据分析技术优化供应链管理，提高供应链效率。</p>
-                    <a href="#" class="text-primary font-medium flex items-center">
+                    <div class="course-details hidden mb-4 space-y-3 text-gray-600">
+                        <p>详细内容将在后续添加</p>
+                    </div>
+                    <a href="#" class="course-toggle text-primary font-medium flex items-center">
                         查看详情 <i class="fa fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -195,7 +205,10 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-3">数据库原理与应用</h3>
                     <p class="text-gray-600 mb-4">学习数据库的基本原理、SQL语言和数据库设计，掌握数据库应用技能。</p>
-                    <a href="#" class="text-primary font-medium flex items-center">
+                    <div class="course-details hidden mb-4 space-y-3 text-gray-600">
+                        <p>详细内容将在后续添加</p>
+                    </div>
+                    <a href="#" class="course-toggle text-primary font-medium flex items-center">
                         查看详情 <i class="fa fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -207,7 +220,10 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-3">更多课程</h3>
                     <p class="text-gray-600 mb-4">后续将添加更多课程信息，包括专业核心课程和选修课程。</p>
-                    <a href="#" class="text-primary font-medium flex items-center">
+                    <div class="course-details hidden mb-4 space-y-3 text-gray-600">
+                        <p>详细内容将在后续添加</p>
+                    </div>
+                    <a href="#" class="course-toggle text-primary font-medium flex items-center">
                         查看详情 <i class="fa fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -291,6 +307,24 @@
             } else {
                 nav.classList.remove('shadow');
             }
+        });
+
+        // 课程详情展开/收起功能
+        document.querySelectorAll('.course-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const details = this.parentElement.querySelector('.course-details');
+                const icon = this.querySelector('i');
+                const text = this.textContent.trim();
+                
+                if (details.classList.contains('hidden')) {
+                    details.classList.remove('hidden');
+                    this.innerHTML = '收起详情 <i class="fa fa-arrow-up ml-2"></i>';
+                } else {
+                    details.classList.add('hidden');
+                    this.innerHTML = '查看详情 <i class="fa fa-arrow-right ml-2"></i>';
+                }
+            });
         });
     </script>
 </body>
