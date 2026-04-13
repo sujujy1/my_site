@@ -199,6 +199,7 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <script>
         // 导航栏滚动效果
         window.addEventListener('scroll', function() {
@@ -216,31 +217,25 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
             const codeEditor = document.getElementById('code-editor');
             const outputDiv = document.getElementById('output');
 
-            // 加载Pyodide
-            async function loadPyodide() {
-                outputDiv.textContent = '正在加载Python环境...';
-                try {
-                    // 加载Pyodide
-                    const pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/" });
-                    
-                    // 安装pandas和numpy
-                    outputDiv.textContent = '正在安装pandas和numpy...';
-                    await pyodide.loadPackage(['pandas', 'numpy']);
-                    
-                    outputDiv.textContent = '环境准备就绪，你可以运行代码了！';
-                    return pyodide;
-                } catch (error) {
-                    outputDiv.textContent = `加载错误: ${error.message}`;
-                    return null;
-                }
-            }
-
             let pyodideInstance = null;
 
             // 初始化Pyodide
-            loadPyodide().then(pyodide => {
-                pyodideInstance = pyodide;
-            });
+            async function initPyodide() {
+                outputDiv.textContent = '正在加载Python环境...';
+                try {
+                    // 加载Pyodide
+                    pyodideInstance = await self.loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/" });
+                    
+                    // 安装pandas和numpy
+                    outputDiv.textContent = '正在安装pandas和numpy...';
+                    await pyodideInstance.loadPackage(['pandas', 'numpy']);
+                    
+                    outputDiv.textContent = '环境准备就绪，你可以运行代码了！';
+                } catch (error) {
+                    outputDiv.textContent = `加载错误: ${error.message}`;
+                    console.error('Pyodide加载错误:', error);
+                }
+            }
 
             // 运行代码
             runButton.addEventListener('click', async function() {
@@ -253,21 +248,21 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
                 outputDiv.textContent = '运行中...';
 
                 try {
-                    // 重定向stdout到输出区域
-                    pyodideInstance.globals.set('print', pyodideInstance.pyimport('builtins').print);
-                    
                     // 执行代码
-                    const result = await pyodideInstance.runPythonAsync(code);
+                    await pyodideInstance.runPythonAsync(code);
                     
                     // 获取输出
                     const stdout = pyodideInstance.globals.get('sys').stdout.getvalue();
                     outputDiv.textContent = stdout || '代码执行完成';
                 } catch (error) {
                     outputDiv.textContent = `错误: ${error.message}`;
+                    console.error('代码执行错误:', error);
                 }
             });
+
+            // 启动初始化
+            initPyodide();
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 </body>
 </html>
