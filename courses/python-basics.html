@@ -199,7 +199,6 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <script>
         // 导航栏滚动效果
         window.addEventListener('scroll', function() {
@@ -210,7 +209,8 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
                 nav.classList.remove('shadow');
             }
         });
-
+    </script>
+    <script>
         // Python代码编辑器功能
         document.addEventListener('DOMContentLoaded', function() {
             const runButton = document.getElementById('run-code');
@@ -223,12 +223,36 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
             async function initPyodide() {
                 outputDiv.textContent = '正在加载Python环境...';
                 try {
+                    // 动态加载Pyodide
+                    if (!window.loadPyodide) {
+                        const script = document.createElement('script');
+                        script.src = 'https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js';
+                        script.type = 'text/javascript';
+                        script.async = true;
+                        document.head.appendChild(script);
+                        
+                        // 等待Pyodide加载完成
+                        await new Promise((resolve, reject) => {
+                            script.onload = resolve;
+                            script.onerror = reject;
+                        });
+                    }
+                    
                     // 加载Pyodide
-                    pyodideInstance = await self.loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/" });
+                    outputDiv.textContent = '正在初始化Python环境...';
+                    pyodideInstance = await window.loadPyodide({ 
+                        indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/",
+                        stdin: () => {},
+                        stdout: (text) => console.log(text),
+                        stderr: (text) => console.error(text)
+                    });
                     
                     // 安装pandas和numpy
                     outputDiv.textContent = '正在安装pandas和numpy...';
                     await pyodideInstance.loadPackage(['pandas', 'numpy']);
+                    
+                    // 导入sys模块以获取stdout
+                    await pyodideInstance.runPythonAsync('import sys');
                     
                     outputDiv.textContent = '环境准备就绪，你可以运行代码了！';
                 } catch (error) {
