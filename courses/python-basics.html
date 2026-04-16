@@ -251,8 +251,7 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
                     outputDiv.textContent = '正在安装pandas和numpy...';
                     await pyodideInstance.loadPackage(['pandas', 'numpy']);
                     
-                    // 导入sys模块以获取stdout
-                    await pyodideInstance.runPythonAsync('import sys');
+
                     
                     outputDiv.textContent = '环境准备就绪，你可以运行代码了！';
                 } catch (error) {
@@ -272,12 +271,17 @@ print(f"每列均值: {arr.mean(axis=0)}")</textarea>
                 outputDiv.textContent = '运行中...';
 
                 try {
+                    // 重定向标准输出
+                    let output = '';
+                    pyodideInstance.globals.set('print', (text) => {
+                        output += text + '\n';
+                    });
+                    
                     // 执行代码
                     await pyodideInstance.runPythonAsync(code);
                     
-                    // 获取输出
-                    const stdout = pyodideInstance.globals.get('sys').stdout.getvalue();
-                    outputDiv.textContent = stdout || '代码执行完成';
+                    // 显示输出
+                    outputDiv.textContent = output || '代码执行完成';
                 } catch (error) {
                     outputDiv.textContent = `错误: ${error.message}`;
                     console.error('代码执行错误:', error);
